@@ -74,5 +74,16 @@ public class UserService {
         return false;
     }
 
+	public boolean updateBalance(int id, double balance) {
+		Optional<User> existingUser = userRepository.findById(id);
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            user.setBalance(user.getBalance()+balance);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+	}
+
 
 }

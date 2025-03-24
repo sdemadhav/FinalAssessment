@@ -16,7 +16,7 @@ public class Portfolio {
     @Column(name = "stock_id", nullable = false)
     private Long stockId;
 
-    @Column(name = "stock_name", nullable = false)
+    @Column(name = "stock_name" ,nullable=false)
     private String stockName;
 
     @Column(name = "stock_symbol")
@@ -24,20 +24,27 @@ public class Portfolio {
 
     @Column(nullable = false)
     private Integer quantity;
+    
+    @Column(name ="current_price", nullable=false)
+    private double currentPrice;
+    
 
     public Portfolio() {}
 
-    public Portfolio(Integer userId, Long stockId, String stockName, String stockSymbol, Integer quantity) {
-        this.userId = userId;
-        this.stockId = stockId;
-        this.stockName = stockName;
-        this.stockSymbol = stockSymbol;
-        this.quantity = quantity;
-    }
-    
-    
+    public Portfolio(Long portfolioId, Integer userId, Long stockId, String stockName, String stockSymbol,
+			Integer quantity, double currentPrice) {
+		super();
+		this.portfolioId = portfolioId;
+		this.userId = userId;
+		this.stockId = stockId;
+		this.stockName = stockName;
+		this.stockSymbol = stockSymbol;
+		this.quantity = quantity;
+		this.currentPrice = currentPrice;
+	}
 
-    public Portfolio(Integer userId, Long stockId, Integer quantity) {
+
+	public Portfolio(Integer userId, Long stockId, Integer quantity) {
 		super();
 		this.userId = userId;
 		this.stockId = stockId;
@@ -91,4 +98,22 @@ public class Portfolio {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+	public double getCurrentPrice() {
+		return currentPrice;
+	}
+
+	public void setCurrentPrice(double currentPrice) {
+		this.currentPrice = currentPrice;
+	}
+
+	@Override
+	public String toString() {
+		return "Portfolio [portfolioId=" + portfolioId + ", userId=" + userId + ", stockId=" + stockId + ", stockName="
+				+ stockName + ", stockSymbol=" + stockSymbol + ", quantity=" + quantity + ", currentPrice="
+				+ currentPrice + "]";
+	}
+	
+	
+    
 }

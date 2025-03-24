@@ -30,14 +30,14 @@ public class PortfolioController {
 
     @PostMapping("/buy")
     public ResponseEntity<String> buyStock(@RequestBody TradeRequest request) {
-        portfolioService.buyStock(request.getUserId(), request.getStockId(), request.getQuantity(), request.getCurrentPrice());
-        return ResponseEntity.ok("Stock purchased successfully.");
+    	System.out.println(request);
+        return portfolioService.buyStock(request.getUserId(), request.getStockId(), request.getQuantity(), request.getCurrentPrice(),request.getStockName());
     }
 
     @PostMapping("/sell")
     public ResponseEntity<String> sellStock(@RequestBody TradeRequest request) {
-        portfolioService.sellStock(request.getUserId(), request.getStockId(), request.getQuantity(), request.getCurrentPrice());
-        return ResponseEntity.ok("Stock sold successfully.");
+        return portfolioService.sellStock(request.getUserId(), request.getStockId(), request.getQuantity(), request.getCurrentPrice());
+        
     }
 
 }

@@ -3,6 +3,8 @@ package com.example.demo.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -27,32 +29,38 @@ public class PortfolioService {
         return portfolioRepository.findByUserId(userId);
     }
 
-    public String buyStock(int userId, Long stockId, int quantity, double currentPrice) {
+    public ResponseEntity<String> buyStock(int userId, Long stockId, int quantity, double currentPrice, String stockName) {
         Userdto user = restTemplate.getForObject(USER_SERVICE_URL + "/" + userId, Userdto.class);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
+        
+        System.out.println(user);
 
         double totalCost = currentPrice * quantity;
         if (user.getBalance() < totalCost) {
-            return "Insufficient balance";
+        	
+            return ResponseEntity.status(HttpStatusCode.valueOf(200)).body("Insufficient balance");
         }
 
-        // Deduct balance
+       
         user.setBalance(user.getBalance() - totalCost);
         restTemplate.put(USER_SERVICE_URL + "/" + userId, user);
 
-        // Update portfolio
+        
         Portfolio portfolio = portfolioRepository.findByUserIdAndStockId(userId, stockId)
                 .orElse(new Portfolio(userId, stockId, 0));
 
         portfolio.setQuantity(portfolio.getQuantity() + quantity);
+        portfolio.setStockName(stockName);
+        portfolio.setCurrentPrice(currentPrice);
+        
         portfolioRepository.save(portfolio);
 
-        return "Stock purchased successfully!";
+        return ResponseEntity.status(HttpStatusCode.valueOf(200)).body("Stock Purchased Successfully!");
     }
 
-    public String sellStock(int userId, Long stockId, int quantity, double currentPrice) {
+    public ResponseEntity<String> sellStock(int userId, Long stockId, int quantity, double currentPrice) {
         Userdto user = restTemplate.getForObject(USER_SERVICE_URL + "/" + userId, Userdto.class);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
@@ -61,17 +69,20 @@ public class PortfolioService {
         Portfolio portfolio = portfolioRepository.findByUserIdAndStockId(userId, stockId)
                 .orElseThrow(() -> new IllegalArgumentException("Stock not found in portfolio"));
 
+        System.out.println("PPPPOOOOOOORRRRTTTFOOOOLIOOOO:::::::"+portfolio.toString());
+        System.out.println("QUANANANNANANNANANA::"+(portfolio.getQuantity()-quantity));
         if (portfolio.getQuantity() < quantity) {
-            return "Insufficient stock quantity";
+        	System.out.println("YESSSSSSSSSSSSSSSSSSSSSS DETEETEETETETTCCCCCEDEDEDEDEDEDEDED !!!");
+            return ResponseEntity.status(HttpStatusCode.valueOf(200)).body("Insufficient stock quantity");
         }
 
         double totalGain = currentPrice * quantity;
 
-        // Add balance
+        
         user.setBalance(user.getBalance() + totalGain);
         restTemplate.put(USER_SERVICE_URL + "/" + userId, user);
 
-        // Update portfolio
+
         portfolio.setQuantity(portfolio.getQuantity() - quantity);
         if (portfolio.getQuantity() == 0) {
             portfolioRepository.delete(portfolio);
@@ -79,6 +90,6 @@ public class PortfolioService {
             portfolioRepository.save(portfolio);
         }
 
-        return "Stock sold successfully!";
+        return ResponseEntity.status(HttpStatusCode.valueOf(200)).body("Stock Sold Successfully!");
     }
 }

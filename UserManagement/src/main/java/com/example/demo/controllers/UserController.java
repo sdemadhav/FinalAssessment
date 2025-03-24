@@ -46,11 +46,6 @@ public class UserController {
         }
     }
 
-
-    
-    
-    
-
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         String response = userService.registerUser(user);
@@ -95,6 +90,18 @@ public class UserController {
         boolean success = userService.resetPassword(username, newPassword);
         if (success) {
             return ResponseEntity.ok("Password reset successfully.");
+        } else {
+            return ResponseEntity.status(404).body("User not found.");
+        }
+    }
+    
+    @PutMapping("/update-balance/{id}/{balance}")
+    public ResponseEntity<String> updateBalance(@PathVariable int id, @PathVariable double balance) {
+        System.out.println("Received request to update user balance with ID: " + id + ", balance to be added: "+balance);
+       
+        boolean updated = userService.updateBalance(id, balance);
+        if (updated) {
+            return ResponseEntity.ok("User updated successfully.");
         } else {
             return ResponseEntity.status(404).body("User not found.");
         }

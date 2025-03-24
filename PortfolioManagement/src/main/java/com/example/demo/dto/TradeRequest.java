@@ -6,6 +6,7 @@ import lombok.Data;
 public class TradeRequest {
     private int userId;
     private Long stockId;
+    private String stockName;
     private int quantity;
     private double currentPrice;
     
@@ -33,8 +34,15 @@ public class TradeRequest {
 	}
 	public void setCurrentPrice(double currentPrice) {
 		this.currentPrice = currentPrice;
+	}
+	public String getStockName() {
+		return stockName;
+	}
+	public void setStockName(String stockName) {
+		this.stockName = stockName;
 	} 
     
+	
     
     
 }
