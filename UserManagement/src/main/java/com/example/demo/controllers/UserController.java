@@ -82,17 +82,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> data) {
-        String username = data.get("username");
-        String newPassword = data.get("newPassword");
-
-        boolean success = userService.resetPassword(username, newPassword);
-        if (success) {
-            return ResponseEntity.ok("Password reset successfully.");
-        } else {
-            return ResponseEntity.status(404).body("User not found.");
-        }
+    
+    @GetMapping("/forgetpassword")
+    public String forgetPassword(@RequestParam String username, @RequestParam String dob) {
+        return userService.forgetPassword(username, dob);
     }
     
     @PutMapping("/update-balance/{id}/{balance}")

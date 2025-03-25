@@ -42,6 +42,16 @@ public class Portfolio {
 		this.quantity = quantity;
 		this.currentPrice = currentPrice;
 	}
+    
+    public Portfolio(int userId,Long stockId, String stockName ,int quantity ,double currentPrice) {
+    	super();
+    	this.userId = userId;
+    	this.stockId = stockId;
+    	this.stockName = stockName;
+    	this.quantity = quantity;
+    	this.currentPrice = currentPrice;
+    	
+    }
 
 
 	public Portfolio(Integer userId, Long stockId, Integer quantity) {

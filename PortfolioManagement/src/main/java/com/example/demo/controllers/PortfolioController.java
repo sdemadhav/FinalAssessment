@@ -34,9 +34,9 @@ public class PortfolioController {
         return portfolioService.buyStock(request.getUserId(), request.getStockId(), request.getQuantity(), request.getCurrentPrice(),request.getStockName());
     }
 
-    @PostMapping("/sell")
-    public ResponseEntity<String> sellStock(@RequestBody TradeRequest request) {
-        return portfolioService.sellStock(request.getUserId(), request.getStockId(), request.getQuantity(), request.getCurrentPrice());
+    @PostMapping("/sell/{id}")
+    public ResponseEntity<String> sellStock(@PathVariable("id") Long id,  @RequestBody TradeRequest request) {
+        return portfolioService.sellStock(id , request.getUserId(), request.getQuantity(), request.getCurrentPrice());
         
     }
 

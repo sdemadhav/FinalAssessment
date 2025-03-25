@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: API-Gateway
+
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: PortfolioHoldings
+          uri: lb://PortfolioManagement
+          predicates:
+            - Path=/holdings/**
+
+        - id: PortfolioWatchlist
+          uri: lb://PortfolioManagement
+          predicates:
+            - Path=/watchlist/**
+
+        - id: UserManagement
+          uri: lb://UserManagement
+          predicates:
+            - Path=/api/users/**
+
+        - id: StockMarketService
+          uri: lb://stock-market-service
+          predicates:
+            - Path=/api/shares/**
+
+        - id: StockMarketService-Rabbit-MQ
+          uri: lb:ws://stock-market-service
+          predicates:
+            - Path=/ws/**
+
+server:
+  port: 9091
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

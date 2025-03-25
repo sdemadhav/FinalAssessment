@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,15 +53,15 @@ public class UserService {
         return false;
     }
 
-    public boolean resetPassword(String username, String newPassword) {
+    public String forgetPassword(String username, String dob) {
         Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            user.get().setPassword(newPassword);
-            userRepository.save(user.get());
-            return true;
+        if (user.isPresent() && user.get().getDob().toString().equals(dob)) {
+            return "Your password is: " + user.get().getPassword();
         }
-        return false;
+        return "Invalid username or date of birth!";
     }
+    
+    
     
     public boolean updateUser(int id, User updatedUser) {
         Optional<User> existingUser = userRepository.findById(id);
